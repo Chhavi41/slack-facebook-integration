@@ -1,0 +1,20 @@
++--------------------------+
+|  Facebook Messenger API  |
++------------+-------------+
+             ↓ (Webhook)
++--------------------------+
+| Express Web Server (API) |  ← Receives incoming messages
++------------+-------------+
+             ↓ (Push to Queue, Fetch sender name via Facebook API if not found in redis (cache))
++--------------------------+
+|       RabbitMQ Queue     |  ← Message Broker for async processing
++------------+-------------+
+             ↓ (Workers Consume Messages)
++----------------------------+
+|    Worker 1 (Message Processing)    |
+| - Format & Send Message to Slack    |
++----------------------------+
+             ↓
++----------------------------+
+|        Slack API           |  ← Sends message to "facebook-updates"
++----------------------------+
