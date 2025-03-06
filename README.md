@@ -92,7 +92,7 @@ Now do the following to obtain required values:
 
 7. Add Webhook in Facebook Developer Portal
    - Go to Webhooks section: In your Facebook Developer App, go to Messenger → Webhooks.
-   - Add webhook URL (https://random-subdomain.ngrok.io/webhook) and verify token generated in step 
+   - Add webhook URL (generated using ngrok in step 5) (https://random-subdomain.ngrok.io/webhook) and verify token generated in step 6
    - Click verify and save
      
 8. Subscribe to Events:
