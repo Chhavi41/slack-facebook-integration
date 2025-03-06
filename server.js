@@ -81,7 +81,7 @@ async function getUserDetails(senderId) {
         logger.info('Cached user name:', response.data.name);
         return response.data.name; // Extracting full name
     } catch (error) {
-        logger.error("❌ Error fetching user name:", error.response ? error.response.data : error.message);
+        logger.error("Error fetching user name:", error.response ? error.response.data : error.message);
         return `User (${senderId})`; // Fallback to sender ID if fetching name fails
     }
 }
