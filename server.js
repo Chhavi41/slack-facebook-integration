@@ -45,15 +45,28 @@ app.post('/webhook', async (req, res) => {
     req.body.entry.forEach(async (entry) => {
       try {
         const webhookEvent = entry.messaging[0];
-
         if (webhookEvent.message) {
           const senderId = webhookEvent.sender.id;
           const messageText = webhookEvent.message.text;
           const senderName = await getUserDetails(senderId);
 
-          logger.info(`Message received`, { sender: senderName, text: messageText });
+          if (webhookEvent.message.text) {
+            const messageText = webhookEvent.message.text;
+            logger.info(`Text Message received from ${senderName}: ${messageText}`);
 
-          await publishToQueue({ senderId, senderName, messageText });
+            await publishToQueue({ type: "text", senderId, senderName, messageText });
+          }
+          if (webhookEvent.message.attachments) {
+            for (let attachment of webhookEvent.message.attachments) {
+              if (["image", "video", "file"].includes(attachment.type)) {
+                const mediaUrl = attachment.payload.url;
+                logger.info(`Media Message received from ${senderName}: ${mediaUrl}`);
+
+                // Push media message to queue
+                await publishToQueue({ type: "media", senderId, senderName, mediaUrl });
+              }
+            }
+          }
         }
       } catch (error) {
         logger.error("Error processing webhook event", { error: error.message });
